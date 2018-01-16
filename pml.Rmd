@@ -1,1 +1,84 @@
-teste
+---
+title: "Pratical Machine Learning - Course Project"
+author: "Mauro Ricardo da Silva"
+date: "16 de janeiro de 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The model was built after the analisys in dataset. In this analisys was possible identify attributes without values. The next step was cleaning the dataset e slicing in training and testing set. The first dataset was submitted to a training in a learning model based in random forest. The testing set, when submitted to model, returned 99,5% accuracy.
+
+## Downloading the files
+
+This URLs was supplied by the Course Project Instructions.
+
+```{r downloading}
+URL_training      <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+destfile_training <- "pml-training.csv"
+
+URL_test      <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+destfile_test <- "pml-test.csv"
+
+if(!file.exists(destfile_training)){
+  download.file(URL_training, destfile_training)
+}
+
+
+if(!file.exists(destfile_test)){
+  download.file(URL_test, destfile_test)
+}
+```
+
+## Loading and cleaning data
+
+The pml-test file was converted into validation set.
+
+```{r cleaning}
+pml_training <-  read.csv("pml-training.csv")
+pml_training <- pml_training[, c(8:11, 37:49, 60:68, 84:86, 102, 113:124, 140, 151:160)]
+
+pml_testing <-  read.csv("pml-test.csv")
+validating  <- pml_testing[, c(8:11, 37:49, 60:68, 84:86, 102, 113:124, 140, 151:160)]
+```
+
+## Slicing data in training and test datasets
+
+The training set was divided into 2 parts. 75% into a training set and 25% into a testing set.
+
+```{r slicing}
+library(caret)
+library(kernlab)
+
+inTrain <- createDataPartition(y = pml_training$classe, p = 0.75, list = FALSE)
+
+training <- pml_training[inTrain, ]
+testing <- pml_training[-inTrain, ]
+dim(training)
+```
+
+## creating predicition model 
+
+The choice by Random forest was motivated by the large number of the attributes. In the first iteration the choice matched the expectation presenting about 99,5% accuracy.
+
+```{r modeling}
+control          <- trainControl(method = "cv",number = 4, allowParallel = TRUE)
+model            <- train(classe ~ ., data=training, method = "rf" , trControl = control)
+predict          <- predict(model, testing)
+confusionMatrix  <- confusionMatrix(testing$classe, predict)
+
+confusionMatrix
+accuracy <- confusionMatrix$overall[1]
+
+error <- (1 - sum(predict == testing$classe) / length(predict))
+error
+```
+
+## making prediction 
+
+```{r predicting}
+result  <- predict(model, validating)
+result
+```
