@@ -72,6 +72,9 @@ error <- (1 - sum(predict == testing$classe) / length(predict))
 error
 ```
 
+The validation method was Cross Validation with 4 folds and the error was about 0.68%
+
+
 ## making prediction 
 
 ```{r predicting}
