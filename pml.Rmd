@@ -55,7 +55,7 @@ testing <- pml_training[-inTrain, ]
 dim(training)
 ```
 
-## creating predicition model 
+## Creating predicition model 
 
 The choice by Random forest was motivated by the large number of the attributes. In the first iteration the choice matched the expectation presenting about 99,5% accuracy.
 
@@ -75,7 +75,7 @@ error
 The validation method was Cross Validation with 4 folds and the error was about 0.68%
 
 
-## making prediction 
+## Making prediction 
 
 ```{r predicting}
 result  <- predict(model, validating)
