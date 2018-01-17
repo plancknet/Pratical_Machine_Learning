@@ -5,10 +5,6 @@ date: "16 de janeiro de 2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 The model was built after the analisys in dataset. In this analisys was possible identify attributes without values. The next step was cleaning the dataset e slicing in training and testing set. The first dataset was submitted to a training in a learning model based in random forest. The testing set, when submitted to model, returned 99,5% accuracy.
 
 ## Downloading the files
